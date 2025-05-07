@@ -58,17 +58,17 @@ export default function Layout() {
           <View flex={1}>
             <Slot />
           </View>
-          <XStack height="$8" p="$2" gap="$2">
+          <XStack p="$2" gap="$2" items="center">
             <Link href="/" asChild>
-              <Button flex={1} height="100%">
+              <Button flex={1} height="$6">
                 <FlipHorizontal />
               </Button>
             </Link>
             <Button
               onPress={openNew}
-              height="100%"
-              width="$8"
-              bg="tomato"
+              height="$7"
+              width="$7"
+              themeInverse
               fontSize="$8"
               fontWeight="bold"
               px="$0"
@@ -76,7 +76,7 @@ export default function Layout() {
               ASK
             </Button>
             <Link href="/account" asChild>
-              <Button flex={1} height="100%">
+              <Button flex={1} height="$6">
                 <UserCircle />
               </Button>
             </Link>
@@ -88,13 +88,14 @@ export default function Layout() {
           forceRemoveScrollEnabled={newOpen}
           dismissOnSnapToBottom
           animation="bouncy"
-          snapPoints={[95]}
+          snapPoints={[90]}
         >
           <Sheet.Overlay
             animation="lazy"
             background="$shadow6"
             enterStyle={{ opacity: 0 }}
             exitStyle={{ opacity: 0 }}
+            opacity={0.9}
           />
           <Sheet.Handle />
           <Sheet.Frame p="$8">
