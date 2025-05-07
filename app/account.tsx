@@ -1,5 +1,9 @@
-import { Text } from "tamagui";
+import { SizableText, View } from "tamagui";
 
 export default function Account() {
-  return <Text>Account</Text>;
+  return (
+    <View>
+      <SizableText>Account</SizableText>
+    </View>
+  );
 }

@@ -11,6 +11,7 @@ import { StatusBar, useColorScheme } from "react-native";
 import {
   Button,
   Form,
+  H1,
   Input,
   Sheet,
   TamaguiProvider,
@@ -51,6 +52,9 @@ export default function Layout() {
           barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
         />
         <YStack height="100%">
+          <XStack justify="center" py="$2">
+            <H1>HALP!</H1>
+          </XStack>
           <View flex={1}>
             <Slot />
           </View>
@@ -63,11 +67,13 @@ export default function Layout() {
             <Button
               onPress={openNew}
               height="100%"
+              width="$8"
               bg="tomato"
               fontSize="$8"
               fontWeight="bold"
+              px="$0"
             >
-              HALP!
+              ASK
             </Button>
             <Link href="/account" asChild>
               <Button flex={1} height="100%">
