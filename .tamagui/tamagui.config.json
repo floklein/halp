@@ -68778,6 +68778,15 @@
           "val": 48,
           "variable": ""
         }
+      },
+      "color": {
+        "background": {
+          "isVar": true,
+          "key": "$background",
+          "name": "c-color-background",
+          "val": "rgb(0,0,0)",
+          "variable": ""
+        }
       }
     },
     "selectionStyles": "Function",
@@ -69615,6 +69624,13 @@
         "key": "$4.5",
         "name": "c-size-4--5",
         "val": 48,
+        "variable": ""
+      },
+      "$color.background": {
+        "isVar": true,
+        "key": "$background",
+        "name": "c-color-background",
+        "val": "rgb(0,0,0)",
         "variable": ""
       }
     },
