@@ -2,13 +2,15 @@
 /**
  * @type {import('expo/metro-config').MetroConfig}
  */
-const { getDefaultConfig } = require('expo/metro-config')
+const { getDefaultConfig } = require("expo/metro-config");
 
 const config = getDefaultConfig(__dirname, {
   // [Web-only]: Enables CSS support in Metro.
   isCSSEnabled: true,
-})
+});
 
-config.resolver.sourceExts.push('mjs')
+config.resolver.unstable_enablePackageExports = true;
 
-module.exports = config
+config.resolver.sourceExts.push("mjs");
+
+module.exports = config;

@@ -1,14 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
 import { View, ZStack } from "tamagui";
-import DilemmaCard from "../components/DilemmaCard";
-import { useTRPC } from "../utils/trpc";
+import DilemmaCard, { Dilemma } from "../components/DilemmaCard";
 
 export default function Index() {
-  const trpc = useTRPC();
-
-  const { data } = useQuery(trpc.dilemma.list.queryOptions());
-
-  const dilemmas = data?.toReversed() ?? [];
+  const dilemmas: Dilemma[] = [];
 
   return (
     <View height="100%" px="$2">

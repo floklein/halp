@@ -1,7 +1,12 @@
-import { Dilemma } from "@halp/api";
 import { ArrowBigLeft, ArrowBigRight } from "@tamagui/lucide-icons";
 import { Button, Card, H2, Paragraph, View, XStack, YStack } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
+
+export interface Dilemma {
+  id: string;
+  question: string;
+  options: [string, string];
+}
 
 export default function DilemmaCard({
   zIndex,
