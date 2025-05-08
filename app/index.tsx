@@ -1,8 +1,13 @@
+import { useQuery } from "@tanstack/react-query";
 import { View, ZStack } from "tamagui";
-import DilemmaCard, { Dilemma } from "../components/DilemmaCard";
+import DilemmaCard from "../components/DilemmaCard";
+import { Dilemma } from "../types/dilemma";
 
 export default function Index() {
-  const dilemmas: Dilemma[] = [];
+  const { data: dilemmas } = useQuery<Dilemma[]>({
+    queryKey: ["dilemmas"],
+    queryFn: async () => (await fetch("/api/dilemmas")).json(),
+  });
 
   return (
     <View height="100%" px="$2">

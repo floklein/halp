@@ -33,6 +33,12 @@ export const tamaguiConfig = createTamagui({
     heading: headingFont,
     body: bodyFont,
   },
+  tokens: {
+    ...defaultConfig.tokens,
+    color: {
+      background: "rgb(0,0,0)",
+    },
+  },
 });
 
 export default tamaguiConfig;
