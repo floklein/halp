@@ -1,7 +1,7 @@
+import { authClient } from "@/utils/auth-client";
 import { Link } from "expo-router";
 import React, { useState } from "react";
 import { Button, Form, H2, Input, Separator, YStack } from "tamagui";
-import { authClient } from "../../utils/auth-client";
 
 export default function Login() {
   const [email, setEmail] = useState("");

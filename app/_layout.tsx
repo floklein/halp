@@ -1,12 +1,12 @@
+import AskSheet from "@/components/AskSheet";
+import CurrentToast from "@/components/CurrentToast";
+import Providers from "@/components/Providers";
 import { FlipHorizontal, UserCircle } from "@tamagui/lucide-icons";
 import { ToastViewport } from "@tamagui/toast";
 import { Link, Stack } from "expo-router";
 import { useState } from "react";
 import { StatusBar, useColorScheme } from "react-native";
 import { Button, H1, View, XStack, YStack } from "tamagui";
-import AskSheet from "../components/AskSheet";
-import CurrentToast from "../components/CurrentToast";
-import Providers from "../components/Providers";
 
 export default function Layout() {
   const colorScheme = useColorScheme();

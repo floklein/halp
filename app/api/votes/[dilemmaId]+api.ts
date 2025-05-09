@@ -1,8 +1,8 @@
+import { db } from "@/db";
+import { Vote, vote as voteTable } from "@/db/schema";
+import { auth } from "@/utils/auth";
+import { voteBodySchema } from "@/zod";
 import { and, count, eq } from "drizzle-orm";
-import { db } from "../../../db";
-import { Vote, vote as voteTable } from "../../../db/schema";
-import { auth } from "../../../utils/auth";
-import { voteBodySchema } from "../../../zod";
 
 export interface VotesSummary {
   votes: [number, number];

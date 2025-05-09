@@ -1,3 +1,5 @@
+import { DilemmaBody, dilemmaBodySchema } from "@/zod";
+import { useZodErrors } from "@/zod/hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
@@ -12,8 +14,6 @@ import {
   YStack,
 } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
-import { DilemmaBody, dilemmaBodySchema } from "../zod";
-import { useZodErrors } from "../zod/hooks";
 import ZodError from "./ZodError";
 
 export default function AskSheet({

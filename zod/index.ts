@@ -1,6 +1,6 @@
+import { dilemma } from "@/db/schema";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { dilemma } from "../db/schema";
 
 export const dilemmaSchema = createSelectSchema(dilemma);
 

@@ -1,8 +1,8 @@
-import { db } from "../../db";
-import type { Dilemma } from "../../db/schema";
-import { dilemma as dilemmaTable } from "../../db/schema";
-import { auth } from "../../utils/auth";
-import { dilemmaBodySchema } from "../../zod";
+import { db } from "@/db";
+import type { Dilemma } from "@/db/schema";
+import { dilemma as dilemmaTable } from "@/db/schema";
+import { auth } from "@/utils/auth";
+import { dilemmaBodySchema } from "@/zod";
 
 export async function GET(request: Request) {
   const dilemmas = await db.select().from(dilemmaTable);

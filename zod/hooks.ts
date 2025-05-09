@@ -7,6 +7,5 @@ export function useZodErrors<S extends ZodSchema>(
   if (!(error instanceof AxiosError)) {
     return null;
   }
-  console.log("error", error);
   return error.response?.data ?? null;
 }

@@ -1,11 +1,11 @@
+import type { VotesSummary } from "@/app/api/votes/[dilemmaId]+api";
+import type { Dilemma } from "@/db/schema";
 import { ArrowBigLeft, ArrowBigRight } from "@tamagui/lucide-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
 import { Button, Card, H2, Paragraph, View, XStack, YStack } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
-import type { VotesSummary } from "../app/api/votes/[dilemmaId]+api";
-import type { Dilemma } from "../db/schema";
 
 export default function DilemmaCard({
   zIndex,

@@ -1,8 +1,8 @@
+import DilemmaCard from "@/components/DilemmaCard";
+import type { Dilemma } from "@/db/schema";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { View, ZStack } from "tamagui";
-import DilemmaCard from "../components/DilemmaCard";
-import type { Dilemma } from "../db/schema";
 
 export default function Index() {
   const { data: dilemmas } = useQuery<Dilemma[]>({
