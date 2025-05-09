@@ -1,8 +1,11 @@
 import { FlipHorizontal, UserCircle } from "@tamagui/lucide-icons";
+import { ToastViewport } from "@tamagui/toast";
 import { Link, Stack } from "expo-router";
 import { useState } from "react";
 import { StatusBar, useColorScheme } from "react-native";
-import { Button, Form, H1, Input, Sheet, View, XStack, YStack } from "tamagui";
+import { Button, H1, View, XStack, YStack } from "tamagui";
+import AskSheet from "../components/AskSheet";
+import CurrentToast from "../components/CurrentToast";
 import Providers from "../components/Providers";
 
 export default function Layout() {
@@ -54,37 +57,9 @@ export default function Layout() {
             </Link>
           </XStack>
         </YStack>
-        <Sheet
-          open={newOpen}
-          onOpenChange={setNewOpen}
-          forceRemoveScrollEnabled={newOpen}
-          dismissOnSnapToBottom
-          animation="bouncy"
-          snapPoints={[90]}
-        >
-          <Sheet.Overlay
-            animation="lazy"
-            background="$shadow6"
-            enterStyle={{ opacity: 0 }}
-            exitStyle={{ opacity: 0 }}
-            opacity={0.9}
-          />
-          <Sheet.Handle />
-          <Sheet.Frame p="$8">
-            <Form>
-              <YStack gap="$8">
-                <Input placeholder="What do you want to ask?" />
-                <XStack gap="$4">
-                  <Input placeholder="Left choice" flex={1} />
-                  <Input placeholder="Right choice" flex={1} />
-                </XStack>
-                <Form.Trigger asChild>
-                  <Button>Submit</Button>
-                </Form.Trigger>
-              </YStack>
-            </Form>
-          </Sheet.Frame>
-        </Sheet>
+        <AskSheet open={newOpen} setOpen={setNewOpen} />
+        <CurrentToast />
+        <ToastViewport width="100%" />
       </View>
     </Providers>
   );

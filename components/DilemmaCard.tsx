@@ -1,7 +1,7 @@
 import { ArrowBigLeft, ArrowBigRight } from "@tamagui/lucide-icons";
-import { Button, Card, H2, Paragraph, View, XStack, YStack } from "tamagui";
+import { Button, Card, H2, Paragraph, XStack, YStack } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
-import { Dilemma } from "../types/dilemma";
+import type { Dilemma } from "../db/schema";
 
 export default function DilemmaCard({
   zIndex,
@@ -23,13 +23,13 @@ export default function DilemmaCard({
       <Card.Header padded>
         <H2>{dilemma.question}</H2>
       </Card.Header>
-      <YStack z={1} px="$4">
-        <View flex={1}>
-          <Paragraph size="$8">{dilemma.options[0]}</Paragraph>
-        </View>
-        <View flex={1} ml="auto">
-          <Paragraph size="$8">{dilemma.options[1]}</Paragraph>
-        </View>
+      <YStack z={1} px="$4" gap="$4">
+        <Paragraph size="$8" width="80%">
+          {dilemma.options[0]}
+        </Paragraph>
+        <Paragraph size="$8" width="80%" ml="auto" text="right">
+          {dilemma.options[1]}
+        </Paragraph>
       </YStack>
       <Card.Footer padded>
         <XStack width="100%" gap="$8" justify="space-between">

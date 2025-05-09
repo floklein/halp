@@ -1,4 +1,7 @@
+import { InferSelectModel } from "drizzle-orm";
 import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+
+// BetterAuth
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -49,3 +52,33 @@ export const verification = pgTable("verification", {
   createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at"),
 });
+
+// Dilemmas
+
+export const dilemma = pgTable("dilemma", {
+  id: text("id").primaryKey(),
+  question: text("question").notNull(),
+  options: text("options").array(2).notNull().$type<[string, string]>(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
+});
+
+export type Dilemma = InferSelectModel<typeof dilemma>;
+
+export const vote = pgTable("vote", {
+  id: text("id").primaryKey(),
+  dilemmaId: text("dilemma_id")
+    .notNull()
+    .references(() => dilemma.id, { onDelete: "cascade" }),
+  option: text("option").notNull().$type<"0" | "1" | "skipped">(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
+});
+
+export type Vote = InferSelectModel<typeof vote>;
