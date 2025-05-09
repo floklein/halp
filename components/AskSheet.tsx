@@ -13,8 +13,7 @@ import {
   YStack,
 } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
-import { DilemmaBody } from "../types";
-import { dilemmaBodySchema } from "../zod";
+import { DilemmaBody, dilemmaBodySchema } from "../zod";
 import { useZodErrors } from "../zod/hooks";
 import ZodError from "./ZodError";
 

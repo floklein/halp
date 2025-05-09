@@ -20,8 +20,13 @@ export const dilemmaBodySchema = z.object({
 export type DilemmaBody = z.infer<typeof dilemmaBodySchema>;
 
 export const voteBodySchema = z.object({
-  dilemmaId: z.string().min(1),
   option: z.enum(["0", "1", "skipped"]),
 });
 
 export type VoteBody = z.infer<typeof voteBodySchema>;
+
+export const votesSummaryBodySchema = z.object({
+  dilemmaId: z.string().min(1),
+});
+
+export type VotesSummaryBody = z.infer<typeof votesSummaryBodySchema>;

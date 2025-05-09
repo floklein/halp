@@ -1,6 +1,10 @@
 import { ArrowBigLeft, ArrowBigRight } from "@tamagui/lucide-icons";
-import { Button, Card, H2, Paragraph, XStack, YStack } from "tamagui";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import React from "react";
+import { Button, Card, H2, Paragraph, View, XStack, YStack } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
+import type { VotesSummary } from "../app/api/votes/[dilemmaId]+api";
 import type { Dilemma } from "../db/schema";
 
 export default function DilemmaCard({
@@ -10,6 +14,49 @@ export default function DilemmaCard({
   zIndex: number;
   dilemma: Dilemma;
 }) {
+  const queryClient = useQueryClient();
+
+  const { data: votesSummary } = useQuery<VotesSummary>({
+    queryKey: ["votesSummary", dilemma.id],
+    queryFn: async () => (await axios.get(`/api/votes/${dilemma.id}`)).data,
+  });
+
+  const { mutate: postVote } = useMutation({
+    mutationFn: async (option: "0" | "1" | "skipped") =>
+      await axios.post(`/api/votes/${dilemma.id}`, {
+        option,
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["dilemmas"] });
+      await queryClient.invalidateQueries({
+        queryKey: ["votesSummary", dilemma.id],
+      });
+    },
+  });
+
+  function vote(option: "0" | "1" | "skipped") {
+    return () => {
+      postVote(option);
+    };
+  }
+
+  const percent0 =
+    votesSummary && (votesSummary?.votes[0] > 0 || votesSummary?.votes[1] > 0)
+      ? Math.round(
+          (votesSummary.votes[0] /
+            (votesSummary.votes[0] + votesSummary.votes[1])) *
+            100
+        )
+      : null;
+  const percent1 =
+    votesSummary && (votesSummary?.votes[0] > 0 || votesSummary?.votes[1] > 0)
+      ? Math.round(
+          (votesSummary.votes[1] /
+            (votesSummary.votes[0] + votesSummary.votes[1])) *
+            100
+        )
+      : null;
+
   return (
     <Card
       height="95%"
@@ -24,12 +71,22 @@ export default function DilemmaCard({
         <H2>{dilemma.question}</H2>
       </Card.Header>
       <YStack z={1} px="$4" gap="$4">
-        <Paragraph size="$8" width="80%">
-          {dilemma.options[0]}
-        </Paragraph>
-        <Paragraph size="$8" width="80%" ml="auto" text="right">
-          {dilemma.options[1]}
-        </Paragraph>
+        <View width="80%">
+          <Paragraph size="$8">{dilemma.options[0]}</Paragraph>
+          {percent0 !== null && (
+            <Paragraph color="$red11">{percent0}%</Paragraph>
+          )}
+        </View>
+        <View width="80%" self="flex-end">
+          <Paragraph size="$8" text="right">
+            {dilemma.options[1]}
+          </Paragraph>
+          {percent1 !== null && (
+            <Paragraph text="right" color="$blue11">
+              {percent1}%
+            </Paragraph>
+          )}
+        </View>
       </YStack>
       <Card.Footer padded>
         <XStack width="100%" gap="$8" justify="space-between">
@@ -41,6 +98,7 @@ export default function DilemmaCard({
             height="$6"
             maxH="$6"
             circular
+            onPress={vote("0")}
           >
             <ArrowBigLeft />
           </Button>
@@ -52,6 +110,7 @@ export default function DilemmaCard({
             height="$6"
             maxH="$6"
             circular
+            onPress={vote("1")}
           >
             <ArrowBigRight />
           </Button>
@@ -62,6 +121,11 @@ export default function DilemmaCard({
           colors={["$red8", "$blue8"]}
           start={[0, 0.5]}
           end={[1, 0.5]}
+          locations={
+            percent0 !== null && percent1 !== null
+              ? [percent0 / 100 - 0.5, (100 - percent1) / 100 + 0.5]
+              : undefined
+          }
           width="100%"
           height="100%"
         />
