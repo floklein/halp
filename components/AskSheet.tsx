@@ -1,4 +1,3 @@
-import { useToastController } from "@tamagui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
@@ -25,7 +24,6 @@ export default function AskSheet({
   setOpen: (open: boolean) => void;
 }) {
   const queryClient = useQueryClient();
-  const toast = useToastController();
 
   const [question, setQuestion] = useState("");
   const [option0, setOption0] = useState("");

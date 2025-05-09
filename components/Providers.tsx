@@ -11,7 +11,7 @@ import { SplashScreen } from "expo-router";
 import { ReactNode, useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { TamaguiProvider } from "tamagui";
-import tamaguiConfig from "../tamagui.config";
+import { tamaguiConfig } from "../tamagui.config";
 import { authClient } from "../utils/auth-client";
 
 function makeQueryClient() {
