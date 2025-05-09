@@ -45,7 +45,7 @@ export default function DilemmaCard({
       ? Math.round(
           (votesSummary.votes[0] /
             (votesSummary.votes[0] + votesSummary.votes[1])) *
-            100
+            100,
         )
       : null;
   const percent1 =
@@ -53,7 +53,7 @@ export default function DilemmaCard({
       ? Math.round(
           (votesSummary.votes[1] /
             (votesSummary.votes[0] + votesSummary.votes[1])) *
-            100
+            100,
         )
       : null;
 

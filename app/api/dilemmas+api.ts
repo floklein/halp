@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     return Response.json("Unauthorized", { status: 401 });
   }
   const { success, data, error } = dilemmaBodySchema.safeParse(
-    await request.json()
+    await request.json(),
   );
   if (!success) {
     return Response.json(error.format(), { status: 400 });

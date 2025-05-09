@@ -11,7 +11,7 @@ export const dilemmaBodySchema = z.object({
     .max(100, "question is too long"),
   options: z
     .array(
-      z.string().min(1, "choice is required").max(50, "choice is too long")
+      z.string().min(1, "choice is required").max(50, "choice is too long"),
     )
     .min(2)
     .max(2),

@@ -51,15 +51,15 @@ export async function POST(request: Request, params: { dilemmaId: string }) {
     .where(
       and(
         eq(voteTable.userId, session.user.id),
-        eq(voteTable.dilemmaId, params.dilemmaId)
-      )
+        eq(voteTable.dilemmaId, params.dilemmaId),
+      ),
     )
     .limit(1);
   if (existingVotes.length > 0) {
     return Response.json({ message: "you already voted" }, { status: 409 });
   }
   const { success, data, error } = voteBodySchema.safeParse(
-    await request.json()
+    await request.json(),
   );
   if (!success) {
     return Response.json(error.format(), { status: 400 });
