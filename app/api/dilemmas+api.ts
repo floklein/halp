@@ -1,11 +1,35 @@
 import { db } from "@/db";
-import type { Dilemma } from "@/db/schema";
-import { dilemma as dilemmaTable } from "@/db/schema";
+import {
+  Dilemma,
+  dilemma as dilemmaTable,
+  vote as voteTable,
+} from "@/db/schema";
 import { auth } from "@/utils/auth";
 import { dilemmaBodySchema } from "@/zod";
+import { and, eq, notExists, sql } from "drizzle-orm";
 
 export async function GET(request: Request) {
-  const dilemmas = await db.select().from(dilemmaTable);
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
+  const dilemmas = session
+    ? await db
+        .select()
+        .from(dilemmaTable)
+        .where(
+          notExists(
+            db
+              .select({ temp: sql`1` })
+              .from(voteTable)
+              .where(
+                and(
+                  eq(voteTable.userId, session.user.id),
+                  eq(voteTable.dilemmaId, dilemmaTable.id),
+                ),
+              ),
+          ),
+        )
+    : await db.select().from(dilemmaTable);
   return Response.json(dilemmas);
 }
 

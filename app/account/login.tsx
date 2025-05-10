@@ -29,7 +29,7 @@ export default function Login() {
             value={password}
             onChangeText={setPassword}
           />
-          <Button themeInverse onPress={login}>
+          <Button theme="accent" onPress={login}>
             login
           </Button>
         </Form>

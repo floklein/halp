@@ -4,8 +4,9 @@ import { ArrowBigLeft, ArrowBigRight } from "@tamagui/lucide-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
-import { Button, Card, H2, Paragraph, View, XStack, YStack } from "tamagui";
+import { Card, H2, Paragraph, View, XStack, YStack } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
+import ProtectedButton from "./ProtectedButton";
 
 export default function DilemmaCard({
   zIndex,
@@ -90,7 +91,7 @@ export default function DilemmaCard({
       </YStack>
       <Card.Footer padded>
         <XStack width="100%" gap="$8" justify="space-between">
-          <Button
+          <ProtectedButton
             theme="red"
             themeInverse
             width="$6"
@@ -101,8 +102,8 @@ export default function DilemmaCard({
             onPress={vote("0")}
           >
             <ArrowBigLeft />
-          </Button>
-          <Button
+          </ProtectedButton>
+          <ProtectedButton
             theme="blue"
             themeInverse
             width="$6"
@@ -113,7 +114,7 @@ export default function DilemmaCard({
             onPress={vote("1")}
           >
             <ArrowBigRight />
-          </Button>
+          </ProtectedButton>
         </XStack>
       </Card.Footer>
       <Card.Background>

@@ -96,7 +96,7 @@ export default function AskSheet({
             </YStack>
             <Card.Footer padded>
               <Form.Trigger asChild>
-                <Button themeInverse width="100%">
+                <Button theme="accent" width="100%">
                   ask the people
                 </Button>
               </Form.Trigger>

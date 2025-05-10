@@ -1,5 +1,6 @@
 import AskSheet from "@/components/AskSheet";
 import CurrentToast from "@/components/CurrentToast";
+import ProtectedButton from "@/components/ProtectedButton";
 import Providers from "@/components/Providers";
 import { FlipHorizontal, UserCircle } from "@tamagui/lucide-icons";
 import { ToastViewport } from "@tamagui/toast";
@@ -39,17 +40,17 @@ export default function Layout() {
                 <FlipHorizontal size="$2" />
               </Button>
             </Link>
-            <Button
+            <ProtectedButton
               onPress={openNew}
               height="$7"
               width="$7"
-              themeInverse
+              theme="accent"
               fontSize="$8"
               fontWeight="bold"
               px="$0"
             >
               ask
-            </Button>
+            </ProtectedButton>
             <Link href="/account" asChild>
               <Button flex={1} height="$6" chromeless rounded="$0">
                 <UserCircle size="$2" />

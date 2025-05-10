@@ -15,6 +15,19 @@ export async function GET(request: Request, params: { dilemmaId: string }) {
   if (!session) {
     return Response.json("Unauthorized", { status: 401 });
   }
+  const userVotes = await db
+    .select({ id: voteTable.id })
+    .from(voteTable)
+    .where(
+      and(
+        eq(voteTable.userId, session.user.id),
+        eq(voteTable.dilemmaId, params.dilemmaId),
+      ),
+    )
+    .limit(1);
+  if (userVotes.length === 0) {
+    return Response.json("you must vote first", { status: 403 });
+  }
   const voteCounts = await db
     .select({
       option: voteTable.option,

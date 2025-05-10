@@ -32,7 +32,7 @@ export default function SignUp() {
             value={password}
             onChangeText={setPassword}
           />
-          <Button themeInverse onPress={signUp}>
+          <Button theme="accent" onPress={signUp}>
             sign up
           </Button>
         </Form>
