@@ -4,50 +4,47 @@ import { Link } from "expo-router";
 import React, { useState } from "react";
 import { Button, Form, H2, Input, Separator, Text, YStack } from "tamagui";
 
-export default function SignUp() {
+export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
 
-  const { mutate: signUp, isPending: isSigningUp } = useMutation({
+  const { mutate: signIn, isPending: isSigningIn } = useMutation({
     mutationFn: async () =>
-      authClient.signUp.email({
+      await authClient.signIn.email({
         email,
         password,
-        name,
       }),
   });
 
-  function handleSignUp() {
-    signUp();
+  function handleSignIn() {
+    signIn();
   }
 
   return (
     <YStack flex={1} gap="$6" p="$6">
       <Form gap="$4">
-        <H2>new here?</H2>
+        <H2>welcome back.</H2>
         <Input
           placeholder="email"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
         />
-        <Input placeholder="new username" value={name} onChangeText={setName} />
         <Input
-          placeholder="new password"
+          placeholder="password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
         />
-        <Button theme="accent" onPress={handleSignUp} disabled={isSigningUp}>
-          sign up
+        <Button theme="accent" onPress={handleSignIn} disabled={isSigningIn}>
+          sign in
         </Button>
       </Form>
       <Separator />
       <YStack gap="$3">
-        <Text>already have an account?</Text>
-        <Link href="/account/signin">
-          <Button width="100%">sign in</Button>
+        <Text>don&apos;t have an account?</Text>
+        <Link href="/account/signup">
+          <Button width="100%">sign up</Button>
         </Link>
       </YStack>
     </YStack>

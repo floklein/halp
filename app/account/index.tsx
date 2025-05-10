@@ -1,17 +1,24 @@
 import { authClient } from "@/utils/auth-client";
-import { Button, SizableText, View } from "tamagui";
+import { useMutation } from "@tanstack/react-query";
+import { Button, H2, YStack } from "tamagui";
 
 export default function Account() {
   const { data: session } = authClient.useSession();
 
-  function logout() {
-    authClient.signOut();
+  const { mutate: signOut, isPending: isSigningOut } = useMutation({
+    mutationFn: () => authClient.signOut(),
+  });
+
+  function handleSignOut() {
+    signOut();
   }
 
   return (
-    <View>
-      <SizableText>{session?.user?.name}</SizableText>
-      <Button onPress={logout}>logout</Button>
-    </View>
+    <YStack flex={1} gap="$6" p="$6" justify="space-between">
+      <H2>{session?.user?.name}</H2>
+      <Button onPress={handleSignOut} disabled={isSigningOut}>
+        sign out
+      </Button>
+    </YStack>
   );
 }

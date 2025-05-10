@@ -53,15 +53,14 @@ export default function AskSheet({
       onOpenChange={setOpen}
       forceRemoveScrollEnabled={open}
       dismissOnSnapToBottom
-      animation="bouncy"
+      animation="medium"
       snapPoints={[80]}
     >
       <Sheet.Overlay
         animation="lazy"
-        background="$shadow6"
+        bg="$shadow6"
         enterStyle={{ opacity: 0 }}
         exitStyle={{ opacity: 0 }}
-        opacity={0.9}
       />
       <Sheet.Handle />
       <Sheet.Frame p="$8">
@@ -72,6 +71,8 @@ export default function AskSheet({
                 placeholder="what do you want to ask?"
                 value={question}
                 onChangeText={setQuestion}
+                maxLength={100}
+                numberOfLines={3}
               />
               <ZodError error={errors?.question?._errors} />
             </Card.Header>
@@ -81,6 +82,7 @@ export default function AskSheet({
                   placeholder="left choice"
                   value={option0}
                   onChangeText={setOption0}
+                  maxLength={50}
                 />
                 <ZodError error={errors?.options?.[0]?._errors} />
               </View>
@@ -90,6 +92,7 @@ export default function AskSheet({
                   text="right"
                   value={option1}
                   onChangeText={setOption1}
+                  maxLength={50}
                 />
                 <ZodError error={errors?.options?.[1]?._errors} />
               </View>

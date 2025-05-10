@@ -22,7 +22,7 @@ export default function DilemmaCard({
     queryFn: async () => (await axios.get(`/api/votes/${dilemma.id}`)).data,
   });
 
-  const { mutate: postVote } = useMutation({
+  const { mutate: postVote, isPending: isVoting } = useMutation({
     mutationFn: async (option: "0" | "1" | "skipped") =>
       await axios.post(`/api/votes/${dilemma.id}`, {
         option,
@@ -90,7 +90,7 @@ export default function DilemmaCard({
         </View>
       </YStack>
       <Card.Footer padded>
-        <XStack width="100%" gap="$8" justify="space-between">
+        <XStack width="100%" gap="$8" items="center" justify="space-between">
           <ProtectedButton
             theme="red"
             themeInverse
@@ -100,8 +100,16 @@ export default function DilemmaCard({
             maxH="$6"
             circular
             onPress={vote("0")}
+            disabled={isVoting}
           >
             <ArrowBigLeft />
+          </ProtectedButton>
+          <ProtectedButton
+            rounded="$8"
+            onPress={vote("skipped")}
+            disabled={isVoting}
+          >
+            skip
           </ProtectedButton>
           <ProtectedButton
             theme="blue"
@@ -112,6 +120,7 @@ export default function DilemmaCard({
             maxH="$6"
             circular
             onPress={vote("1")}
+            disabled={isVoting}
           >
             <ArrowBigRight />
           </ProtectedButton>

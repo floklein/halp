@@ -11,7 +11,7 @@ export default function Layout() {
       </Stack.Protected>
       <Stack.Protected guard={!isLoggedIn}>
         <Stack.Screen name="signup" />
-        <Stack.Screen name="login" />
+        <Stack.Screen name="signin" />
       </Stack.Protected>
     </Stack>
   );

@@ -4,6 +4,20 @@ import { createInterFont } from "@tamagui/font-inter";
 import { createTamagui } from "tamagui";
 
 const animations = createAnimations({
+  fast: {
+    damping: 20,
+    mass: 1.2,
+    stiffness: 250,
+  },
+  medium: {
+    damping: 10,
+    mass: 0.9,
+    stiffness: 100,
+  },
+  slow: {
+    damping: 20,
+    stiffness: 60,
+  },
   bouncy: {
     type: "spring",
     damping: 10,
@@ -37,6 +51,13 @@ export const tamaguiConfig = createTamagui({
     ...defaultConfig.tokens,
     color: {
       background: "rgb(0,0,0)",
+    },
+  },
+  defaultProps: {
+    Button: {
+      disabledStyle: {
+        opacity: 0.5,
+      },
     },
   },
 });
