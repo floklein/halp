@@ -68823,6 +68823,13 @@
       "allowedStyleValues": "somewhat-strict-web",
       "maxDarkLightNesting": 2
     },
+    "defaultProps": {
+      "Button": {
+        "disabledStyle": {
+          "opacity": 0.5
+        }
+      }
+    },
     "unset": {
       "fontFamily": "$body"
     },

@@ -1,25 +1,23 @@
 import type { VotesSummary } from "@/app/api/votes/[dilemmaId]+api";
 import type { Dilemma } from "@/db/schema";
-import { ArrowBigLeft, ArrowBigRight } from "@tamagui/lucide-icons";
+import { authClient } from "@/utils/auth-client";
+import { ArrowBigLeft, ArrowBigRight, ChevronUp } from "@tamagui/lucide-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
-import { Card, H2, Paragraph, View, XStack, YStack } from "tamagui";
+import { Button, Card, H2, Paragraph, View, XStack, YStack } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
 import ProtectedButton from "./ProtectedButton";
 
-export default function DilemmaCard({
-  zIndex,
-  dilemma,
-}: {
-  zIndex: number;
-  dilemma: Dilemma;
-}) {
+export default function DilemmaCard({ dilemma }: { dilemma: Dilemma }) {
   const queryClient = useQueryClient();
+
+  const isSignedIn = !!authClient.useSession().data;
 
   const { data: votesSummary } = useQuery<VotesSummary>({
     queryKey: ["votesSummary", dilemma.id],
     queryFn: async () => (await axios.get(`/api/votes/${dilemma.id}`)).data,
+    enabled: isSignedIn,
   });
 
   const { mutate: postVote, isPending: isVoting } = useMutation({
@@ -28,7 +26,6 @@ export default function DilemmaCard({
         option,
       }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["dilemmas"] });
       await queryClient.invalidateQueries({
         queryKey: ["votesSummary", dilemma.id],
       });
@@ -59,19 +56,11 @@ export default function DilemmaCard({
       : null;
 
   return (
-    <Card
-      height="95%"
-      scale={1 - zIndex * 0.1}
-      y={`${zIndex * 7.5}%`}
-      elevate
-      elevation={1000}
-      overflow="hidden"
-      filter={`blur(${zIndex * 1}px) brightness(${1 - zIndex * 0.33})`}
-    >
+    <Card elevate elevation="$10" overflow="hidden" flex={1} height="100%">
       <Card.Header padded>
         <H2>{dilemma.question}</H2>
       </Card.Header>
-      <YStack z={1} px="$4" gap="$4">
+      <YStack z={10} px="$4" gap="$4">
         <View width="80%">
           <Paragraph size="$8">{dilemma.options[0]}</Paragraph>
           {percent0 !== null && (
@@ -109,7 +98,10 @@ export default function DilemmaCard({
             onPress={vote("skipped")}
             disabled={isVoting}
           >
-            skip
+            <YStack items="center">
+              <ChevronUp size={18} color="$accent10" />
+              <Button.Text mt={-6}>skip</Button.Text>
+            </YStack>
           </ProtectedButton>
           <ProtectedButton
             theme="blue"

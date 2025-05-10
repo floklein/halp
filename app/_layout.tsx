@@ -23,45 +23,43 @@ export default function Layout() {
       <StatusBar
         barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
       />
-      <View flex={1}>
+      <YStack flex={1}>
         <XStack justify="center" py="$2">
           <H1 fontWeight="bold">HALP!</H1>
         </XStack>
-        <YStack flex={1}>
-          <View flex={1}>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="index" />
-              <Stack.Screen name="account" />
-            </Stack>
-          </View>
-          <XStack items="flex-end" pt="$2">
-            <Link href="/" asChild>
-              <Button flex={1} height="$6" chromeless rounded="$0">
-                <FlipHorizontal size="$2" />
-              </Button>
-            </Link>
-            <ProtectedButton
-              onPress={openNew}
-              height="$7"
-              width="$7"
-              theme="accent"
-              fontSize="$8"
-              fontWeight="bold"
-              px="$0"
-            >
-              ask
-            </ProtectedButton>
-            <Link href="/account" asChild>
-              <Button flex={1} height="$6" chromeless rounded="$0">
-                <UserCircle size="$2" />
-              </Button>
-            </Link>
-          </XStack>
-        </YStack>
+        <View flex={1}>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="account" />
+          </Stack>
+        </View>
+        <XStack items="flex-end" pt="$2">
+          <Link href="/" asChild>
+            <Button flex={1} height="$6" rounded="$0">
+              <FlipHorizontal size="$2" />
+            </Button>
+          </Link>
+          <ProtectedButton
+            onPress={openNew}
+            height="$7"
+            width="$7"
+            theme="accent"
+            fontSize="$8"
+            fontWeight="bold"
+            px="$0"
+          >
+            ask
+          </ProtectedButton>
+          <Link href="/account" asChild>
+            <Button flex={1} height="$6" rounded="$0">
+              <UserCircle size="$2" />
+            </Button>
+          </Link>
+        </XStack>
         <AskSheet open={newOpen} setOpen={setNewOpen} />
         <CurrentToast />
         <ToastViewport width="100%" />
-      </View>
+      </YStack>
     </Providers>
   );
 }
