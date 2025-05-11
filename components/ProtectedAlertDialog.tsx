@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { ReactNode } from "react";
 import {
   AlertDialog,
@@ -15,8 +15,14 @@ export default function ProtectedAlertDialog({
 }: AlertDialogProps & {
   button?: ReactNode;
 }) {
+  const router = useRouter();
+
+  function goToSignUp() {
+    router.replace("/account/signup");
+  }
+
   return (
-    <AlertDialog native {...props}>
+    <AlertDialog {...props}>
       <AlertDialog.Trigger asChild>{button}</AlertDialog.Trigger>
       <AlertDialog.Portal>
         <AlertDialog.Overlay
@@ -49,11 +55,11 @@ export default function ProtectedAlertDialog({
               <AlertDialog.Cancel asChild>
                 <Button>cancel</Button>
               </AlertDialog.Cancel>
-              <Link href="/account/signup">
-                <AlertDialog.Action asChild>
-                  <Button theme="accent">sign up</Button>
-                </AlertDialog.Action>
-              </Link>
+              <AlertDialog.Action asChild>
+                <Button theme="accent" onPress={goToSignUp}>
+                  sign up
+                </Button>
+              </AlertDialog.Action>
             </XStack>
           </YStack>
         </AlertDialog.Content>

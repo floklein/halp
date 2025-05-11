@@ -46,7 +46,7 @@ export default function SignUp() {
       <Separator />
       <YStack gap="$3">
         <Text>already have an account?</Text>
-        <Link href="/account/signin">
+        <Link href="/account/signin" asChild replace>
           <Button width="100%">sign in</Button>
         </Link>
       </YStack>
