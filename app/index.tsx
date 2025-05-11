@@ -74,7 +74,7 @@ export default function Index() {
               setHasVotedForCurrentDilemma={setHasVotedForCurrentDilemma}
             />
           )}
-          cardStyle={{ height: "100%" }}
+          cardStyle={{ width: "100%", height: "100%" }}
           onSwipeLeft={vote("0")}
           onSwipeRight={vote("1")}
           onSwipeTop={

@@ -17,7 +17,7 @@ export default function ProtectedAlertDialog({
 }) {
   return (
     <AlertDialog native {...props}>
-      {button && <AlertDialog.Trigger asChild>{button}</AlertDialog.Trigger>}
+      <AlertDialog.Trigger asChild>{button}</AlertDialog.Trigger>
       <AlertDialog.Portal>
         <AlertDialog.Overlay
           key="overlay"
