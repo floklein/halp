@@ -1,6 +1,7 @@
 import DilemmaCard from "@/components/DilemmaCard";
 import ProtectedAlertDialog from "@/components/ProtectedAlertDialog";
 import { dilemma, type Dilemma } from "@/db/schema";
+import { authClient } from "@/utils/auth-client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { useRef, useState } from "react";
@@ -11,9 +12,13 @@ import { View } from "tamagui";
 export default function Index() {
   const queryClient = useQueryClient();
 
+  const isSignedIn = !!authClient.useSession().data;
+
   const swiperRef = useRef<SwiperCardRefType>(null);
 
   const [alertOpen, setAlertOpen] = useState(false);
+  const [hasVotedForCurrentDilemma, setHasVotedForCurrentDilemma] =
+    useState(false);
 
   const { data: dilemmas = [] } = useQuery<Dilemma[]>({
     queryKey: ["dilemmas"],
@@ -53,19 +58,37 @@ export default function Index() {
     };
   }
 
+  function onIndexChange(index: number) {
+    setHasVotedForCurrentDilemma(false);
+  }
+
   return (
     <View height="100%" p="$4">
       <GestureHandlerRootView>
         <Swiper
           ref={swiperRef}
           data={dilemmas}
-          renderCard={(item) => <DilemmaCard dilemma={item} />}
+          renderCard={(item) => (
+            <DilemmaCard
+              dilemma={item}
+              setHasVotedForCurrentDilemma={setHasVotedForCurrentDilemma}
+            />
+          )}
           cardStyle={{ height: "100%" }}
-          onSwipeRight={vote("1")}
           onSwipeLeft={vote("0")}
-          onSwipeTop={vote("skipped")}
+          onSwipeRight={vote("1")}
+          onSwipeTop={
+            hasVotedForCurrentDilemma || !isSignedIn
+              ? undefined
+              : vote("skipped")
+          }
+          onIndexChange={onIndexChange}
           OverlayLabelLeft={RedOverlay}
           OverlayLabelRight={BlueOverlay}
+          OverlayLabelTop={BlackOverlay}
+          disableLeftSwipe={hasVotedForCurrentDilemma}
+          disableRightSwipe={hasVotedForCurrentDilemma}
+          disableBottomSwipe
         />
       </GestureHandlerRootView>
       <ProtectedAlertDialog open={alertOpen} onOpenChange={setAlertOpen} />
@@ -74,9 +97,13 @@ export default function Index() {
 }
 
 function BlueOverlay() {
-  return <View height="100%" bg="$blue8" rounded="$4" />;
+  return <View height="100%" bg="$blue9" rounded="$4" />;
 }
 
 function RedOverlay() {
-  return <View height="100%" bg="$red8" rounded="$4" />;
+  return <View height="100%" bg="$red9" rounded="$4" />;
+}
+
+function BlackOverlay() {
+  return <View height="100%" bg="$black1" rounded="$4" opacity={0.5} />;
 }

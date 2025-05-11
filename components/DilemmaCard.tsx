@@ -1,15 +1,21 @@
 import type { VotesSummary } from "@/app/api/votes/[dilemmaId]+api";
 import type { Dilemma } from "@/db/schema";
 import { authClient } from "@/utils/auth-client";
-import { ArrowBigLeft, ArrowBigRight, ChevronUp } from "@tamagui/lucide-icons";
+import { ArrowBigLeft, ArrowBigRight, ArrowBigUp } from "@tamagui/lucide-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
-import { Button, Card, H2, Paragraph, View, XStack, YStack } from "tamagui";
+import { Card, H2, Paragraph, Text, View, XStack, YStack } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
 import ProtectedButton from "./ProtectedButton";
 
-export default function DilemmaCard({ dilemma }: { dilemma: Dilemma }) {
+export default function DilemmaCard({
+  dilemma,
+  setHasVotedForCurrentDilemma,
+}: {
+  dilemma: Dilemma;
+  setHasVotedForCurrentDilemma: (hasVoted: boolean) => void;
+}) {
   const queryClient = useQueryClient();
 
   const isSignedIn = !!authClient.useSession().data;
@@ -18,6 +24,7 @@ export default function DilemmaCard({ dilemma }: { dilemma: Dilemma }) {
     queryKey: ["votesSummary", dilemma.id],
     queryFn: async () => (await axios.get(`/api/votes/${dilemma.id}`)).data,
     enabled: isSignedIn,
+    retry: false,
   });
 
   const { mutate: postVote, isPending: isVoting } = useMutation({
@@ -26,6 +33,7 @@ export default function DilemmaCard({ dilemma }: { dilemma: Dilemma }) {
         option,
       }),
     onSuccess: async () => {
+      setHasVotedForCurrentDilemma(true);
       await queryClient.invalidateQueries({
         queryKey: ["votesSummary", dilemma.id],
       });
@@ -38,6 +46,7 @@ export default function DilemmaCard({ dilemma }: { dilemma: Dilemma }) {
     };
   }
 
+  const hasVoted = !!votesSummary;
   const percent0 =
     votesSummary && (votesSummary?.votes[0] > 0 || votesSummary?.votes[1] > 0)
       ? Math.round(
@@ -64,7 +73,7 @@ export default function DilemmaCard({ dilemma }: { dilemma: Dilemma }) {
         <View width="80%">
           <Paragraph size="$8">{dilemma.options[0]}</Paragraph>
           {percent0 !== null && (
-            <Paragraph color="$red11">{percent0}%</Paragraph>
+            <Paragraph opacity={0.6}>{percent0}%</Paragraph>
           )}
         </View>
         <View width="80%" self="flex-end">
@@ -72,7 +81,7 @@ export default function DilemmaCard({ dilemma }: { dilemma: Dilemma }) {
             {dilemma.options[1]}
           </Paragraph>
           {percent1 !== null && (
-            <Paragraph text="right" color="$blue11">
+            <Paragraph text="right" opacity={0.6}>
               {percent1}%
             </Paragraph>
           )}
@@ -80,47 +89,41 @@ export default function DilemmaCard({ dilemma }: { dilemma: Dilemma }) {
       </YStack>
       <Card.Footer padded>
         <XStack width="100%" gap="$8" items="center" justify="space-between">
-          <ProtectedButton
-            theme="red"
-            themeInverse
-            width="$6"
-            maxW="$6"
-            height="$6"
-            maxH="$6"
-            circular
-            onPress={vote("0")}
-            disabled={isVoting}
-          >
-            <ArrowBigLeft />
-          </ProtectedButton>
-          <ProtectedButton
-            rounded="$8"
-            onPress={vote("skipped")}
-            disabled={isVoting}
-          >
+          {!hasVoted && (
+            <ProtectedButton
+              theme="red"
+              themeInverse
+              size="$6"
+              circular
+              onPress={vote("0")}
+              disabled={isVoting}
+            >
+              <ArrowBigLeft />
+            </ProtectedButton>
+          )}
+          <XStack gap="$8" items="center" justify="center" mx="auto">
             <YStack items="center">
-              <ChevronUp size={18} color="$accent10" />
-              <Button.Text mt={-6}>skip</Button.Text>
+              <ArrowBigUp />
+              <Text>{hasVoted || !isSignedIn ? "next" : "skip"}</Text>
             </YStack>
-          </ProtectedButton>
-          <ProtectedButton
-            theme="blue"
-            themeInverse
-            width="$6"
-            maxW="$6"
-            height="$6"
-            maxH="$6"
-            circular
-            onPress={vote("1")}
-            disabled={isVoting}
-          >
-            <ArrowBigRight />
-          </ProtectedButton>
+          </XStack>
+          {!hasVoted && (
+            <ProtectedButton
+              theme="blue"
+              themeInverse
+              size="$6"
+              circular
+              onPress={vote("1")}
+              disabled={isVoting}
+            >
+              <ArrowBigRight />
+            </ProtectedButton>
+          )}
         </XStack>
       </Card.Footer>
       <Card.Background>
         <LinearGradient
-          colors={["$red8", "$blue8"]}
+          colors={["$red9", "$blue9"]}
           start={[0, 0.5]}
           end={[1, 0.5]}
           locations={
