@@ -1,24 +1,21 @@
-import { authClient } from "@/utils/auth-client";
+import { authClient, throwIfError } from "@/utils/auth-client";
 import { useMutation } from "@tanstack/react-query";
-import { Link, useRouter } from "expo-router";
+import { Link } from "expo-router";
 import React, { useState } from "react";
 import { Button, Form, H2, Input, Separator, Text, YStack } from "tamagui";
 
 export default function SignIn() {
-  const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const { mutate: signIn, isPending: isSigningIn } = useMutation({
     mutationFn: () =>
-      authClient.signIn.email({
-        email,
-        password,
-      }),
-    onSuccess: () => {
-      router.replace("/");
-    },
+      throwIfError(
+        authClient.signIn.email({
+          email,
+          password,
+        }),
+      ),
   });
 
   function handleSignIn() {

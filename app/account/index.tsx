@@ -1,4 +1,4 @@
-import { authClient } from "@/utils/auth-client";
+import { authClient, throwIfError } from "@/utils/auth-client";
 import { useMutation } from "@tanstack/react-query";
 import { Button, H2, YStack } from "tamagui";
 
@@ -6,7 +6,7 @@ export default function Account() {
   const { data: session } = authClient.useSession();
 
   const { mutate: signOut, isPending: isSigningOut } = useMutation({
-    mutationFn: () => authClient.signOut(),
+    mutationFn: () => throwIfError(authClient.signOut()),
   });
 
   function handleSignOut() {

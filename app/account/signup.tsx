@@ -1,4 +1,4 @@
-import { authClient } from "@/utils/auth-client";
+import { authClient, throwIfError } from "@/utils/auth-client";
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "expo-router";
 import React, { useState } from "react";
@@ -10,12 +10,14 @@ export default function SignUp() {
   const [name, setName] = useState("");
 
   const { mutate: signUp, isPending: isSigningUp } = useMutation({
-    mutationFn: async () =>
-      authClient.signUp.email({
-        email,
-        password,
-        name,
-      }),
+    mutationFn: () =>
+      throwIfError(
+        authClient.signUp.email({
+          email,
+          password,
+          name,
+        }),
+      ),
   });
 
   function handleSignUp() {

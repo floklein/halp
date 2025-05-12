@@ -1,5 +1,6 @@
 import { tamaguiConfig } from "@/tamagui.config";
 import { authClient } from "@/utils/auth-client";
+import { getBaseURL } from "@/utils/config";
 import {
   DarkTheme,
   DefaultTheme,
@@ -13,6 +14,8 @@ import { SplashScreen } from "expo-router";
 import { ReactNode, useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { TamaguiProvider } from "tamagui";
+
+axios.defaults.baseURL = getBaseURL();
 
 function makeQueryClient() {
   return new QueryClient({
