@@ -20,10 +20,12 @@ export default function Index() {
   const [hasVotedForCurrentDilemma, setHasVotedForCurrentDilemma] =
     useState(false);
 
-  const { data: dilemmas = [] } = useQuery<Dilemma[]>({
+  const { data: apiDilemmas = [] } = useQuery<Dilemma[]>({
     queryKey: ["dilemmas"],
     queryFn: async () => (await axios.get("/api/dilemmas")).data,
   });
+
+  const dilemmas = apiDilemmas.slice(0, 2);
 
   const { mutate: postVote } = useMutation({
     mutationFn: async ({
