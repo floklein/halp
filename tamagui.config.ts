@@ -37,7 +37,11 @@ const animations = createAnimations({
   },
 });
 
-const headingFont = createInterFont();
+const headingFont = createInterFont({
+  weight: {
+    normal: 900,
+  },
+});
 const bodyFont = createInterFont();
 
 export const tamaguiConfig = createTamagui({

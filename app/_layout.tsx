@@ -1,12 +1,10 @@
-import AskSheet from "@/components/AskSheet";
 import CurrentToast from "@/components/CurrentToast";
-import ProtectedButton from "@/components/ProtectedButton";
 import Providers from "@/components/Providers";
 import { FlipHorizontal, UserCircle } from "@tamagui/lucide-icons";
 import { ToastViewport } from "@tamagui/toast";
-import { Link, Slot } from "expo-router";
-import { useState } from "react";
-import { StatusBar, useColorScheme } from "react-native";
+import { Link, Stack } from "expo-router";
+import React from "react";
+import { Platform, StatusBar, useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, H1, useTheme, View, XStack, YStack } from "tamagui";
@@ -14,12 +12,6 @@ import { Button, H1, useTheme, View, XStack, YStack } from "tamagui";
 function LayoutWithinProviders() {
   const colorScheme = useColorScheme();
   const theme = useTheme();
-
-  const [newOpen, setNewOpen] = useState(false);
-
-  function openNew() {
-    setNewOpen(true);
-  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -32,32 +24,42 @@ function LayoutWithinProviders() {
             <H1 fontWeight="bold">HALP!</H1>
           </XStack>
           <View flex={1} style={{ zIndex: 1 }}>
-            <Slot />
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="index" options={{ animation: "none" }} />
+              <Stack.Screen
+                name="ask"
+                options={{
+                  headerShown: Platform.OS !== "web",
+                  presentation: "modal",
+                }}
+              />
+              <Stack.Screen name="account" options={{ animation: "none" }} />
+            </Stack>
           </View>
-          <XStack items="flex-end" pt="$2" style={{ zIndex: 2 }}>
-            <Link href="/" asChild>
-              <Button flex={1} height="$6" rounded="$0">
+          <XStack items="flex-end" pt="$2" z={2}>
+            <Link href="/" asChild replace>
+              <Button flex={1} height="$6" rounded="$0" chromeless>
                 <FlipHorizontal size="$2" />
               </Button>
             </Link>
-            <ProtectedButton
-              onPress={openNew}
-              height="$7"
-              width="$7"
-              theme="accent"
-              fontSize="$8"
-              fontWeight="bold"
-              px="$0"
-            >
-              ask
-            </ProtectedButton>
-            <Link href="/account" asChild>
-              <Button flex={1} height="$6" rounded="$0">
+            <Link href="/ask" asChild>
+              <Button
+                height="$7"
+                width="$7"
+                theme="accent"
+                fontSize="$8"
+                fontWeight="bold"
+                px="$0"
+              >
+                ask
+              </Button>
+            </Link>
+            <Link href="/account" asChild replace>
+              <Button flex={1} height="$6" rounded="$0" chromeless>
                 <UserCircle size="$2" />
               </Button>
             </Link>
           </XStack>
-          <AskSheet open={newOpen} setOpen={setNewOpen} />
           <CurrentToast />
           <ToastViewport width="100%" />
         </YStack>

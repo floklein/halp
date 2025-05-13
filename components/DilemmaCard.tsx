@@ -5,7 +5,7 @@ import { ArrowBigLeft, ArrowBigRight, ArrowBigUp } from "@tamagui/lucide-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
-import { Card, H2, Paragraph, Text, View, XStack, YStack } from "tamagui";
+import { Card, H1, H2, H3, Text, View, XStack, YStack } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
 import ProtectedButton from "./ProtectedButton";
 
@@ -67,23 +67,25 @@ export default function DilemmaCard({
   return (
     <Card elevate elevation="$10" overflow="hidden" flex={1} height="100%">
       <Card.Header padded>
-        <H2>{dilemma.question}</H2>
+        <H2 color="$white1">{dilemma.question}</H2>
       </Card.Header>
       <YStack z={10} px="$4" gap="$4">
         <View width="80%">
-          <Paragraph size="$8">{dilemma.options[0]}</Paragraph>
+          <H3 color="$white1">{dilemma.options[0]}</H3>
           {percent0 !== null && (
-            <Paragraph opacity={0.6}>{percent0}%</Paragraph>
+            <H1 opacity={0.6} color="$white1">
+              {percent0}%
+            </H1>
           )}
         </View>
         <View width="80%" self="flex-end">
-          <Paragraph size="$8" text="right">
+          <H3 color="$white1" text="right">
             {dilemma.options[1]}
-          </Paragraph>
+          </H3>
           {percent1 !== null && (
-            <Paragraph text="right" opacity={0.6}>
+            <H1 text="right" opacity={0.6} color="$white1">
               {percent1}%
-            </Paragraph>
+            </H1>
           )}
         </View>
       </YStack>
@@ -103,8 +105,10 @@ export default function DilemmaCard({
           )}
           <XStack gap="$8" items="center" justify="center" mx="auto">
             <YStack items="center">
-              <ArrowBigUp />
-              <Text>{hasVoted || !isSignedIn ? "next" : "skip"}</Text>
+              <ArrowBigUp color="$white1" />
+              <Text color="$white1">
+                {hasVoted || !isSignedIn ? "next" : "skip"}
+              </Text>
             </YStack>
           </XStack>
           {!hasVoted && (
@@ -128,7 +132,10 @@ export default function DilemmaCard({
           end={[1, 0.5]}
           locations={
             percent0 !== null && percent1 !== null
-              ? [percent0 / 100 - 0.5, (100 - percent1) / 100 + 0.5]
+              ? [
+                  Math.max(0, percent0 / 100 - 0.5),
+                  Math.min(1, (100 - percent1) / 100 + 0.5),
+                ]
               : undefined
           }
           width="100%"
