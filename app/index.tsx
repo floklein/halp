@@ -2,11 +2,7 @@ import DilemmaCard from "@/components/DilemmaCard";
 import ProtectedAlertDialog from "@/components/ProtectedAlertDialog";
 import type { Dilemma } from "@/db/schema";
 import { authClient } from "@/utils/auth-client";
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -14,8 +10,6 @@ import { Swiper, SwiperCardRefType } from "rn-swiper-list";
 import { View } from "tamagui";
 
 export default function Index() {
-  const queryClient = useQueryClient();
-
   const isSignedIn = !!authClient.useSession().data;
 
   const [dilemmas, setDilemmas] = useState<Dilemma[]>([]);
@@ -24,11 +18,9 @@ export default function Index() {
 
   const swiperRef = useRef<SwiperCardRefType>(null);
 
-  const { data, fetchNextPage } = useInfiniteQuery<Dilemma[]>({
+  const { data: apiDilemmas = [], refetch } = useQuery<Dilemma[]>({
     queryKey: ["dilemmas"],
     queryFn: async () => (await axios.get(`/api/dilemmas`)).data,
-    initialPageParam: undefined,
-    getNextPageParam: (lastPage) => lastPage.at(-1)?.id,
   });
 
   const { mutate: postVote } = useMutation({
@@ -42,11 +34,6 @@ export default function Index() {
       await axios.post(`/api/votes/${dilemmaId}`, {
         option,
       }),
-    onSuccess: async (_, { dilemmaId }) => {
-      await queryClient.invalidateQueries({
-        queryKey: ["votesSummary", dilemmaId],
-      });
-    },
     onError: (error) => {
       swiperRef.current?.swipeBack();
       if (error instanceof AxiosError && error.status === 401) {
@@ -70,20 +57,19 @@ export default function Index() {
 
   useEffect(() => {
     setDilemmas((oldDilemmas) => {
-      const newDilemmas = data?.pages.at(-1) ?? [];
-      const filteredNewDilemmas = newDilemmas.filter(
+      const filteredNewDilemmas = apiDilemmas.filter(
         (dilemma) =>
           !oldDilemmas.some((oldDilemma) => oldDilemma.id === dilemma.id),
       );
       return [...oldDilemmas, ...filteredNewDilemmas];
     });
-  }, [data?.pages]);
+  }, [apiDilemmas]);
 
   useEffect(() => {
     if (activeIndex === dilemmas.length - 1) {
-      fetchNextPage();
+      refetch();
     }
-  }, [activeIndex, dilemmas.length, fetchNextPage]);
+  }, [activeIndex, dilemmas.length, refetch]);
 
   return (
     <View height="100%" p="$4">
