@@ -1,5 +1,5 @@
 import type { VotesSummary } from "@/app/api/votes/[dilemmaId]+api";
-import { type Dilemma } from "@/db/schema";
+import type { Dilemma } from "@/db/schema";
 import { authClient } from "@/utils/auth-client";
 import { ArrowBigLeft, ArrowBigRight, ArrowBigUp } from "@tamagui/lucide-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
