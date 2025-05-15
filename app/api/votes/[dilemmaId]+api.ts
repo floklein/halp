@@ -58,6 +58,12 @@ export async function POST(request: Request, params: { dilemmaId: string }) {
   if (!session) {
     return Response.json("Unauthorized", { status: 401 });
   }
+  const { success, data, error } = voteBodySchema.safeParse(
+    await request.json(),
+  );
+  if (!success) {
+    return Response.json(error.format(), { status: 400 });
+  }
   const existingVotes = await db
     .select({ id: voteTable.id })
     .from(voteTable)
@@ -68,14 +74,8 @@ export async function POST(request: Request, params: { dilemmaId: string }) {
       ),
     )
     .limit(1);
-  if (existingVotes.length > 0) {
+  if (data.option !== "skipped" && existingVotes.length > 0) {
     return Response.json({ message: "you already voted" }, { status: 409 });
-  }
-  const { success, data, error } = voteBodySchema.safeParse(
-    await request.json(),
-  );
-  if (!success) {
-    return Response.json(error.format(), { status: 400 });
   }
   const vote: Vote = {
     id: crypto.randomUUID(),

@@ -10,7 +10,7 @@ async function main() {
       with: {
         account: 1,
         dilemma: 10,
-        vote: 50,
+        vote: 100,
       },
     },
     dilemma: {

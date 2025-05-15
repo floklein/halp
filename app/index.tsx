@@ -1,10 +1,14 @@
 import DilemmaCard from "@/components/DilemmaCard";
 import ProtectedAlertDialog from "@/components/ProtectedAlertDialog";
-import { dilemma, type Dilemma } from "@/db/schema";
+import type { Dilemma } from "@/db/schema";
 import { authClient } from "@/utils/auth-client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Swiper, SwiperCardRefType } from "rn-swiper-list";
 import { View } from "tamagui";
@@ -14,18 +18,18 @@ export default function Index() {
 
   const isSignedIn = !!authClient.useSession().data;
 
+  const [dilemmas, setDilemmas] = useState<Dilemma[]>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [alertOpen, setAlertOpen] = useState(false);
+
   const swiperRef = useRef<SwiperCardRefType>(null);
 
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [hasVotedForCurrentDilemma, setHasVotedForCurrentDilemma] =
-    useState(false);
-
-  const { data: apiDilemmas = [] } = useQuery<Dilemma[]>({
+  const { data, fetchNextPage } = useInfiniteQuery<Dilemma[]>({
     queryKey: ["dilemmas"],
-    queryFn: async () => (await axios.get("/api/dilemmas")).data,
+    queryFn: async () => (await axios.get(`/api/dilemmas`)).data,
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => lastPage.at(-1)?.id,
   });
-
-  const dilemmas = apiDilemmas.slice(0, 2);
 
   const { mutate: postVote } = useMutation({
     mutationFn: async ({
@@ -38,9 +42,9 @@ export default function Index() {
       await axios.post(`/api/votes/${dilemmaId}`, {
         option,
       }),
-    onSuccess: async () => {
+    onSuccess: async (_, { dilemmaId }) => {
       await queryClient.invalidateQueries({
-        queryKey: ["votesSummary", dilemma.id],
+        queryKey: ["votesSummary", dilemmaId],
       });
     },
     onError: (error) => {
@@ -61,8 +65,25 @@ export default function Index() {
   }
 
   function onIndexChange(index: number) {
-    setHasVotedForCurrentDilemma(false);
+    setActiveIndex(index);
   }
+
+  useEffect(() => {
+    setDilemmas((oldDilemmas) => {
+      const newDilemmas = data?.pages.at(-1) ?? [];
+      const filteredNewDilemmas = newDilemmas.filter(
+        (dilemma) =>
+          !oldDilemmas.some((oldDilemma) => oldDilemma.id === dilemma.id),
+      );
+      return [...oldDilemmas, ...filteredNewDilemmas];
+    });
+  }, [data?.pages]);
+
+  useEffect(() => {
+    if (activeIndex === dilemmas.length - 1) {
+      fetchNextPage();
+    }
+  }, [activeIndex, dilemmas.length, fetchNextPage]);
 
   return (
     <View height="100%" p="$4">
@@ -70,26 +91,19 @@ export default function Index() {
         <Swiper
           ref={swiperRef}
           data={dilemmas}
-          renderCard={(item) => (
-            <DilemmaCard
-              dilemma={item}
-              setHasVotedForCurrentDilemma={setHasVotedForCurrentDilemma}
-            />
-          )}
+          renderCard={(item, index) =>
+            index >= activeIndex - 1 && index <= activeIndex + 1 ? (
+              <DilemmaCard dilemma={item} />
+            ) : null
+          }
           cardStyle={{ width: "100%", height: "100%" }}
           onSwipeLeft={vote("0")}
           onSwipeRight={vote("1")}
-          onSwipeTop={
-            hasVotedForCurrentDilemma || !isSignedIn
-              ? undefined
-              : vote("skipped")
-          }
+          onSwipeTop={!isSignedIn ? undefined : vote("skipped")}
           onIndexChange={onIndexChange}
           OverlayLabelLeft={RedOverlay}
           OverlayLabelRight={BlueOverlay}
           OverlayLabelTop={BlackOverlay}
-          disableLeftSwipe={hasVotedForCurrentDilemma}
-          disableRightSwipe={hasVotedForCurrentDilemma}
           disableBottomSwipe
         />
       </GestureHandlerRootView>

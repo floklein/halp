@@ -29,7 +29,8 @@ export async function GET(request: Request) {
               ),
           ),
         )
-    : await db.select().from(dilemmaTable);
+        .limit(10)
+    : await db.select().from(dilemmaTable).limit(10);
   return Response.json(dilemmas);
 }
 
