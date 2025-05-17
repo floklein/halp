@@ -32,7 +32,14 @@ export default {
       },
     },
     owner: "floklein",
-    plugins: ["expo-router"],
+    plugins: [
+      [
+        "expo-router",
+        {
+          origin: process.env.EXPO_SERVER_URL,
+        },
+      ],
+    ],
     scheme: "halp",
   },
 };
