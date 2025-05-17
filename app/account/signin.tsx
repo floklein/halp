@@ -1,5 +1,5 @@
 import { authClient, throwIfError } from "@/utils/auth-client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -14,10 +14,12 @@ import {
 } from "tamagui";
 
 export default function SignIn() {
+  const queryClient = useQueryClient();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { mutate: signIn, isPending: isSigningIn } = useMutation({
+  const { mutateAsync: signIn, isPending: isSigningIn } = useMutation({
     mutationFn: () =>
       throwIfError(
         authClient.signIn.email({
@@ -27,8 +29,9 @@ export default function SignIn() {
       ),
   });
 
-  function handleSignIn() {
-    signIn();
+  async function handleSignIn() {
+    await signIn();
+    await queryClient.invalidateQueries({ queryKey: ["dilemmas"] });
   }
 
   return (

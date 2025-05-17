@@ -1,16 +1,19 @@
 import { authClient, throwIfError } from "@/utils/auth-client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, H2, YStack } from "tamagui";
 
 export default function Account() {
+  const queryClient = useQueryClient();
+
   const { data: session } = authClient.useSession();
 
-  const { mutate: signOut, isPending: isSigningOut } = useMutation({
+  const { mutateAsync: signOut, isPending: isSigningOut } = useMutation({
     mutationFn: () => throwIfError(authClient.signOut()),
   });
 
-  function handleSignOut() {
-    signOut();
+  async function handleSignOut() {
+    await signOut();
+    await queryClient.invalidateQueries({ queryKey: ["dilemmas"] });
   }
 
   return (
