@@ -9,6 +9,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Swiper, SwiperCardRefType } from "rn-swiper-list";
 import { View } from "tamagui";
 
+const defaultApiDilemmas: Dilemma[] = [];
+
 export default function Index() {
   const isSignedIn = !!authClient.useSession().data;
 
@@ -18,7 +20,9 @@ export default function Index() {
 
   const swiperRef = useRef<SwiperCardRefType>(null);
 
-  const { data: apiDilemmas = [], refetch } = useQuery<Dilemma[]>({
+  const { data: apiDilemmas = defaultApiDilemmas, refetch } = useQuery<
+    Dilemma[]
+  >({
     queryKey: ["dilemmas"],
     queryFn: async () => (await axios.get(`/api/dilemmas`)).data,
   });
